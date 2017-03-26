@@ -13,8 +13,11 @@ app.get('/', function(request, response) {
   response.render('pages/index');
 });
 
-app.post('/', function(request, response) {
+app.post('/text', function(request, response) {
   response.status(200).send("RADI!!!!!!!!")
+});
+app.post('/json', function(request, response) {
+  response.status(200).json({status: "RADI!!!!!!!!"})
 });
 
 app.get('/test', function(request, response) {
