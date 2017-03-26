@@ -33,7 +33,10 @@ app.listen(app.get('port'), function () {
 
 
 app.get('/redis-test', function (request, response) {
-  client = redis.createClient();
+  client = redis.createClient({
+    host:  "redis://h:p931a15716ad2b8cfe36404b28315e98346ff2091a5162d8efddee9c1cf25a496@ec2-34-206-56-30.compute-1.amazonaws.com",
+    port: 11299
+  });
 
   // if you'd like to select database 3, instead of 0 (default), call
   // client.select(3, function() { /* ... */ });
