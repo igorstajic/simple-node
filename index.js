@@ -1,7 +1,12 @@
 var express = require('express');
 var app = express();
 var redis = require("redis");
+var bodyParser = require('body-parser')
+app.use(bodyParser.json())
 
+client = redis.createClient({
+  url: "redis://h:p931a15716ad2b8cfe36404b28315e98346ff2091a5162d8efddee9c1cf25a496@ec2-34-206-56-30.compute-1.amazonaws.com:11299",
+});
 app.set('port', (process.env.PORT || 5000));
 
 app.use(express.static(__dirname + '/public'));
@@ -32,11 +37,8 @@ app.listen(app.get('port'), function () {
 });
 
 
-app.get('/redis-test', function (request, response) {
-  client = redis.createClient({
-    host:  "redis://h:p931a15716ad2b8cfe36404b28315e98346ff2091a5162d8efddee9c1cf25a496@ec2-34-206-56-30.compute-1.amazonaws.com",
-    port: 11299
-  });
+app.post('/redis-test', function (request, response) {
+
 
   // if you'd like to select database 3, instead of 0 (default), call
   // client.select(3, function() { /* ... */ });
@@ -44,16 +46,12 @@ app.get('/redis-test', function (request, response) {
   client.on("error", function (err) {
     console.log("Error " + err);
   });
-
-  client.set("string key", "string val", redis.print);
-  client.hset("hash key", "hashtest 1", "some value", redis.print);
-  client.hset(["hash key", "hashtest 2", "some other value"], redis.print);
-  client.hkeys("hash key", function (err, replies) {
-    var reply = "";
-    replies.forEach(function (reply, i) {
-      reply += "    " + i + ": " + reply + "\n";
-    });
-    client.quit();
-    response.status(200).send("res: \n" + reply);
-  });
+  console.log(request.body);
+  client.set("poslovnica_1", JSON.stringify(request.body));
+  response.status(200).send("OK");
 });
+app.get('/redis-test', function (request, response) {
+  client.get("poslovnica_1", function (err, reply) {
+    response.status(200).json(JSON.parse(reply.toString()));
+  });
+})
