@@ -2,6 +2,9 @@ var express = require('express');
 var app = express();
 var redis = require("redis");
 var bodyParser = require('body-parser')
+var cors = require('cors')
+
+app.use(cors())
 app.use(bodyParser.json())
 
 client = redis.createClient({
